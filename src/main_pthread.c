@@ -2,14 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <pthread.h>
 #include "AES.h"
 
 // AES-128
 #define KEY_SIZE 16 // bytes
 #define BLOCK_SIZE 16 // bytes
+#define numThreads 4
 
-// void BMP_encrypt(const char *fileName, unsigned char *key, int keySize);
-void BMP_encrypt(const char *fileName, unsigned char *key, int keySize);
+typedef struct {
+    unsigned char *data;
+    unsigned char *encryptedData;
+    unsigned char *key;
+    int keySize;
+    size_t start;
+    size_t end;
+    char padding[64];
+} ThreadData;
+
+void *encrypt_block(void *arg);
+void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize);
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +38,7 @@ int main(int argc, char *argv[])
 
     // AES Encryption with EBC
     if (strcmp(fileExtension, ".bmp") == 0) {
-        BMP_encrypt(inputFileName, key, KEY_SIZE);
+        BMP_encrypt_pthread(inputFileName, key, KEY_SIZE);
     } else {
         printf("Unsupported file format: %s\n", fileExtension);
         return 1;
@@ -35,11 +47,10 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
-    printf("Processing BMP file\n");
+void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize) {
+    printf("Processing BMP file with %d threads\n", numThreads);
     FILE *file = fopen(fileName, "rb");
 
-    // BMP Header is 54 bytes
     unsigned char header[54];
     fread(header, sizeof(unsigned char), 54, file);
 
@@ -50,7 +61,7 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     unsigned char *data = calloc(fileSize, sizeof(unsigned char));
     fread(data, sizeof(unsigned char), fileSize, file);
     fclose(file);
-    
+
     printf("AES ENCRYPTION START!\n");
     clock_t start = clock();
 
@@ -58,8 +69,22 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     size_t paddedSize = numBlocks * BLOCK_SIZE;
     unsigned char *encryptedData = calloc(paddedSize, sizeof(unsigned char));
 
-    for (size_t i = 0; i < numBlocks; i++) {
-        aes_encrypt(data + i * BLOCK_SIZE, encryptedData + i * BLOCK_SIZE, key, keySize);
+    pthread_t threads[numThreads];
+    ThreadData threadData[numThreads];
+
+    size_t blocksPerThread = numBlocks / numThreads;
+    for (int i = 0; i < numThreads; i++) {
+        threadData[i].data = data;
+        threadData[i].encryptedData = encryptedData;
+        threadData[i].key = key;
+        threadData[i].keySize = keySize;
+        threadData[i].start = i * blocksPerThread;
+        threadData[i].end = (i == numThreads - 1) ? numBlocks : (i + 1) * blocksPerThread;
+        pthread_create(&threads[i], NULL, encrypt_block, &threadData[i]);
+    }
+
+    for (int i = 0; i < numThreads; i++) {
+        pthread_join(threads[i], NULL);
     }
 
     clock_t end = clock();
@@ -73,4 +98,14 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     free(data);
     free(encryptedData);
     printf("BMP encryption complete\n");
+}
+
+void *encrypt_block(void *arg) {
+    ThreadData *threadData = (ThreadData *)arg;
+    for (size_t i = threadData->start; i < threadData->end; i++) {
+        aes_encrypt(threadData->data + i * BLOCK_SIZE,
+                    threadData->encryptedData + i * BLOCK_SIZE, 
+                    threadData->key, threadData->keySize);
+    }
+    return NULL;
 }

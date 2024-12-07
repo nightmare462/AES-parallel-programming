@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g
+CFLAGS = -g -pthread
 SOURCE_DIR = src
 BUILD_DIR = build
 OBJECTS = $(BUILD_DIR)/main.o $(BUILD_DIR)/AES.o

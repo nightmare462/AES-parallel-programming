@@ -5,14 +5,18 @@ The project implements AES-128 encryption on a BMP image using ECB mode.
 ## Reference
 https://github.com/m3y54m/aes-in-c/tree/main
 ## Compile and run
+Choose the methods you want to implement.
+
+<option> can be `main_text` or `main_pthreads` and so on.
+```
+cp <option> main.c 
+```
 Build:
 ```
 make
 ```
-The input file should be an bmp image.
 Run:
 ```
 ./build/aes ./test/img.bmp
 ```
-Output will be an encrypted_image.
 ## Evaluation
