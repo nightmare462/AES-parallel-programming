@@ -10,6 +10,7 @@
 
 // void BMP_encrypt(const char *fileName, unsigned char *key, int keySize);
 void BMP_encrypt(const char *fileName, unsigned char *key, int keySize);
+void BMP_decrypt(const char *fileName, unsigned char *key, int keySize);
 
 int main(int argc, char *argv[])
 {
@@ -24,9 +25,13 @@ int main(int argc, char *argv[])
 
     expandKey(expandedKey, key, KEY_SIZE, sizeof(expandedKey));
 
-    // AES Encryption with EBC
+    // Check if we want to encrypt or decrypt
     if (strcmp(fileExtension, ".bmp") == 0) {
-        BMP_encrypt(inputFileName, key, KEY_SIZE);
+        if (argc > 2 && strcmp(argv[2], "decrypt") == 0) {
+            BMP_decrypt(inputFileName, key, KEY_SIZE);
+        } else {
+            BMP_encrypt(inputFileName, key, KEY_SIZE);
+        }
     } else {
         printf("Unsupported file format: %s\n", fileExtension);
         return 1;
@@ -36,7 +41,7 @@ int main(int argc, char *argv[])
 }
 
 void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
-    printf("Processing BMP file\n");
+    printf("Processing BMP file for encryption\n");
     FILE *file = fopen(fileName, "rb");
 
     // BMP Header is 54 bytes
@@ -63,7 +68,7 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     }
 
     clock_t end = clock();
-    printf("Time %f ms\n", ((float)end - (float)start)/CLOCKS_PER_SEC *1000);
+    printf("Time %f ms\n", ((float)end - (float)start) / CLOCKS_PER_SEC * 1000);
 
     FILE *outputFile = fopen("encrypted_image.bmp", "wb");
     fwrite(header, sizeof(unsigned char), 54, outputFile);
@@ -73,4 +78,43 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     free(data);
     free(encryptedData);
     printf("BMP encryption complete\n");
+}
+
+void BMP_decrypt(const char *fileName, unsigned char *key, int keySize) {
+    printf("Processing BMP file for decryption\n");
+    FILE *file = fopen(fileName, "rb");
+
+    // BMP Header is 54 bytes
+    unsigned char header[54];
+    fread(header, sizeof(unsigned char), 54, file);
+
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file) - 54;
+    fseek(file, 54, SEEK_SET);
+
+    unsigned char *encryptedData = calloc(fileSize, sizeof(unsigned char));
+    fread(encryptedData, sizeof(unsigned char), fileSize, file);
+    fclose(file);
+    
+    printf("AES DECRYPTION START!\n");
+    clock_t start = clock();
+
+    size_t numBlocks = (fileSize + BLOCK_SIZE - 1) / BLOCK_SIZE;
+    unsigned char *decryptedData = calloc(fileSize, sizeof(unsigned char));
+
+    for (size_t i = 0; i < numBlocks; i++) {
+        aes_decrypt(encryptedData + i * BLOCK_SIZE, decryptedData + i * BLOCK_SIZE, key, keySize);
+    }
+
+    clock_t end = clock();
+    printf("Time %f ms\n", ((float)end - (float)start) / CLOCKS_PER_SEC * 1000);
+
+    FILE *outputFile = fopen("decrypted_image.bmp", "wb");
+    fwrite(header, sizeof(unsigned char), 54, outputFile);
+    fwrite(decryptedData, sizeof(unsigned char), fileSize, outputFile);
+    fclose(outputFile);
+
+    free(encryptedData);
+    free(decryptedData);
+    printf("BMP decryption complete\n");
 }
