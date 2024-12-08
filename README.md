@@ -7,23 +7,26 @@ https://github.com/m3y54m/aes-in-c/tree/main
 ## Compile and run
 Choose the methods you want to implement.
 
-Parallel options: `main_serial` or `main_pthreads` and so on
-
-```
-cp <option> main.c 
-```
-
-`main_text` implement AES on text.
+`main_text` implement AES on text, and the others implement AES on a BMP image in different parallel methods.
 
 Build:
 ```
 make
 ```
 
-Run:
+Run: 
 ```
-./build/aes ./test/img.bmp
+./build/aes <test_img>
+```
+```
+./build/aes_openmp <test_img>
+```
+```
+./build/aes_aes_pthread <test_img> <thread_num>
 ```
 
 ## Evaluation
-目前做出來 pthreads 並沒有辦法做到平行化，甚至比沒有平行化的時間還多一點
+
+## Future work
+1. Parallize AES implementation with SIMD.
+2. Brutual decryption with parallel programming.

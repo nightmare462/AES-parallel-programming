@@ -8,7 +8,6 @@
 // AES-128
 #define KEY_SIZE 16 // bytes
 #define BLOCK_SIZE 16 // bytes
-#define numThreads 4
 
 typedef struct {
     unsigned char *data;
@@ -17,37 +16,27 @@ typedef struct {
     int keySize;
     size_t start;
     size_t end;
-    char padding[64];
 } ThreadData;
 
 void *encrypt_block(void *arg);
-void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize);
+void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize, int numThreads);
 
 int main(int argc, char *argv[])
 {
     const char *inputFileName = argv[1];
-    const char *fileExtension = strrchr(inputFileName, '.');
+    int numThreads = atoi(argv[2]);
 
-    // Rijndael's key expansion 
-    // Expands an 128 bytes key into an 176 bytes key
     const int expandedKeySize = 176;
     unsigned char expandedKey[expandedKeySize];
     unsigned char key[16] = {'I', 't', 'i', 's', 'a', 's', 'e', 'c', 'r', 'e', 't', 'e', 'k', 'e', 'y', '.'};
 
     expandKey(expandedKey, key, KEY_SIZE, sizeof(expandedKey));
-
-    // AES Encryption with EBC
-    if (strcmp(fileExtension, ".bmp") == 0) {
-        BMP_encrypt_pthread(inputFileName, key, KEY_SIZE);
-    } else {
-        printf("Unsupported file format: %s\n", fileExtension);
-        return 1;
-    }
+    BMP_encrypt_pthread(inputFileName, key, KEY_SIZE, numThreads);
 
     return 0;
 }
 
-void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize) {
+void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize, int numThreads) {
     printf("Processing BMP file with %d threads\n", numThreads);
     FILE *file = fopen(fileName, "rb");
 
@@ -58,7 +47,7 @@ void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize) 
     long fileSize = ftell(file) - 54;
     fseek(file, 54, SEEK_SET);
 
-    unsigned char *data = calloc(fileSize, sizeof(unsigned char));
+    unsigned char *data = aligned_alloc(64, fileSize);
     fread(data, sizeof(unsigned char), fileSize, file);
     fclose(file);
 
@@ -67,7 +56,7 @@ void BMP_encrypt_pthread(const char *fileName, unsigned char *key, int keySize) 
 
     size_t numBlocks = (fileSize + BLOCK_SIZE - 1) / BLOCK_SIZE;
     size_t paddedSize = numBlocks * BLOCK_SIZE;
-    unsigned char *encryptedData = calloc(paddedSize, sizeof(unsigned char));
+    unsigned char *encryptedData = aligned_alloc(64, paddedSize);
 
     pthread_t threads[numThreads];
     ThreadData threadData[numThreads];
