@@ -22,7 +22,7 @@ Run:
 ./build/aes_openmp <test_img>
 ```
 ```
-./build/aes_aes_pthread <test_img> <thread_num>
+./build/aes_pthread <test_img> <thread_num>
 ```
 
 ## Evaluation
