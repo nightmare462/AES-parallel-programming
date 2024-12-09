@@ -7,9 +7,8 @@
 #include <stdalign.h>
 
 // AES-128
-#define KEY_SIZE 32 // bytes
-#define BLOCK_SIZE 32 // bytes
-#define ALIGNMENT 64
+#define KEY_SIZE 16 // bytes
+#define BLOCK_SIZE 16 // bytes
 
 // void BMP_encrypt(const char *fileName, unsigned char *key, int keySize);
 void BMP_encrypt(const char *fileName, unsigned char *key, int keySize);
@@ -22,9 +21,9 @@ int main(int argc, char *argv[])
 
     // Rijndael's key expansion 
     // Expands an 128 bytes key into an 176 bytes key
-    const int expandedKeySize = 240;
+    const int expandedKeySize = 176;
     unsigned char expandedKey[expandedKeySize];
-    unsigned char key[KEY_SIZE] = {'I', 't', 'i', 's', 'a', 's', 'e', 'c', 'r', 'e', 't', 'e', 'k', 'e', 'y', '.', 'I', 't', 'i', 's', 'a', 's', 'e', 'c', 'r', 'e', 't', 'e', 'k', 'e', 'y', '.'};
+    unsigned char key[KEY_SIZE] = {'I', 't', 'i', 's', 'a', 's', 'e', 'c', 'r', 'e', 't', 'e', 'k', 'e', 'y', '.'};
 
     expandKey(expandedKey, key, KEY_SIZE, sizeof(expandedKey));
 
@@ -54,22 +53,12 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     fseek(file, 0, SEEK_END);
     long fileSize = ftell(file) - 54;
     fseek(file, 54, SEEK_SET);
-;
+
     size_t numBlocks = (fileSize + BLOCK_SIZE - 1) / BLOCK_SIZE;
     size_t paddedSize = numBlocks * BLOCK_SIZE;
     
-    
-    unsigned char *data = aligned_alloc(64, numBlocks * 64);
-    unsigned char *temp = aligned_alloc(64, fileSize);
-    fread(temp, sizeof(unsigned char), fileSize, file);
-
-    for (size_t i = 0; i < numBlocks; i++) {
-        memcpy(data + i * ALIGNMENT, temp + i * BLOCK_SIZE, BLOCK_SIZE);
-        memset(data + i * ALIGNMENT + BLOCK_SIZE, 0, ALIGNMENT - BLOCK_SIZE);
-    }
-    free(temp);
-    //unsigned char *data = aligned_alloc(64, fileSize);
-    //fread(data, sizeof(unsigned char), fileSize, file);
+    unsigned char *data = aligned_alloc(64, fileSize);
+    fread(data, sizeof(unsigned char), fileSize, file);
 
     fclose(file);
     
@@ -82,9 +71,9 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     //printf("Number of threads: %d\n", omp_get_max_threads());
     printf("%d\n", numBlocks);
 
-    #pragma omp parallel for num_threads(4)
+    #pragma omp parallel for num_threads(4) schedule (guided)
     for (size_t i = 0; i < numBlocks; i++) {
-        aes_encrypt(data + i * ALIGNMENT, encryptedData + i * BLOCK_SIZE, key, keySize);
+        aes_encrypt(data + i * BLOCK_SIZE, encryptedData + i * BLOCK_SIZE, key, keySize);
     }
 
     clock_t end = clock();
