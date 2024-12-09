@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 unsigned char getSBoxValue(unsigned char num);
 unsigned char getSBoxInvert(unsigned char num);
 
@@ -38,4 +42,7 @@ void aes_invRound(unsigned char *state, unsigned char *roundKey);
 void aes_invMain(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
 char aes_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, int size);
 
+#ifdef __cplusplus
+}
+#endif
 #endif // AES_H
