@@ -1,9 +1,9 @@
 CC = gcc
 CXX_MPI = mpicxx
-CFLAGS = -g
-CFLAGS_OPENMP = -g -fopenmp
-CFLAGS_PTHREAD = -g -pthread
-CFLAGS_MPI = -g
+CFLAGS = -g -O3
+CFLAGS_OPENMP = -g -fopenmp -O3
+CFLAGS_PTHREAD = -g -pthread -O3
+CFLAGS_MPI = -g -O3
 
 SOURCE_DIR = src
 BUILD_DIR = build
@@ -13,8 +13,8 @@ OBJECTS_OPENMP = $(BUILD_DIR)/main_openmp.o $(BUILD_DIR)/AES.o
 OBJECTS_PTHREAD = $(BUILD_DIR)/main_pthread.o $(BUILD_DIR)/AES.o
 OBJECTS_MPI = $(BUILD_DIR)/main_mpi.o $(BUILD_DIR)/AES.o
 
-all: $(BUILD_DIR) aes aes_openmp aes_pthread aes_mpi
-
+all: $(BUILD_DIR) aes aes_openmp aes_pthread aes_mpi openssl aes_ni aes_ni_pthread
+ 
 $(BUILD_DIR):
 	mkdir -pv $(BUILD_DIR)
 
@@ -44,6 +44,15 @@ aes_pthread: $(OBJECTS_PTHREAD)
 
 aes_mpi: $(BUILD_DIR)/main_mpi.o $(BUILD_DIR)/AES.o
 	$(CXX_MPI) $(CFLAGS_MPI) $^ -o $(BUILD_DIR)/aes_mpi
+
+openssl:
+	gcc src/main_openssl.c -o build/aes_openssl -lssl -lcrypto -O3
+
+aes_ni:
+	gcc -O3 -maes -msse4.2 -o build/aes-ni AES-NI/main.c -fopenmp
+
+aes_ni_pthread:
+	gcc -O3 -maes -msse4.2 -o build/aes-ni-pthread AES-NI/main_pthread.c -pthread
 
 clean:
 	rm -rf $(BUILD_DIR)
