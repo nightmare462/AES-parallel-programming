@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -g -O3
-CFLAGS_OPENMP = -g -fopenmp -O3
-CFLAGS_PTHREAD = -g -pthread -O3
+CFLAGS = -g -O3 -Wall
+CFLAGS_OPENMP = -g -fopenmp -O3 -Wall
+CFLAGS_PTHREAD = -g -pthread -O3 -Wall
 
 SOURCE_DIR = src
 BUILD_DIR = build
