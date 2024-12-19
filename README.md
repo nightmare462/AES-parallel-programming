@@ -7,10 +7,6 @@ https://github.com/m3y54m/aes-in-c/tree/main
 ## Compile and run
 Build all: `make`
 
-Build pthread: `make aes_pthread`
-
-Build openMP: `make aes_openmp`
-
 Run: 
 
 `./build/aes <test_img>`
@@ -22,3 +18,11 @@ Run:
 `./build/aes-ni <test_img>`
 
 `./build/aes-ni-pthread <test_img>`
+
+## Performance testing
+You can use `cnt.py` to measure the performance of different executables by running each of them 500 times. 
+
+### Usage
+Run the following command:
+
+`python3 src/cnt.py ./build/<executable> <test_img> <num_threads>`
