@@ -10,9 +10,9 @@ Run:
 
 `./build/aes <test_img>`
 
-`./build/aes_openmp <test_img> <thread_num>`
+`./build/aes_openmp <test_img> <numThreads>`
 
-`./build/aes_pthread <test_img> <thread_num>`
+`./build/aes_pthread <test_img> <numThreads>`
 
 `./build/aes-ni <test_img>`
 
@@ -24,7 +24,7 @@ You can use `cnt.py` to measure the performance of different executables by runn
 ### Usage
 Run the following command:
 
-`python3 src/cnt.py ./build/<executable> <test_img> <num_threads>`
+`python3 src/cnt.py ./build/<executable> <test_img> <numThreads>`
 
 ## Reference
 https://github.com/m3y54m/aes-in-c/tree/main
