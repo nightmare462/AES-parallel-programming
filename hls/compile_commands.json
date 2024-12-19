@@ -1,0 +1,50 @@
+[
+  {
+    "directory": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component",
+    "arguments": [
+      "C:\\Xilinx\\Vitis_HLS\\2024.1\\vcxx\\libexec\\clang++.exe",
+      "-fhls",
+      "-hls-syn-headers-dir=C:\\Xilinx\\Vitis_HLS\\2024.1\\common\\technology\\autopilot",
+      "",
+      "-c",
+      "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\sbox.cpp"
+    ],
+    "file": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\sbox.cpp"
+  },
+  {
+    "directory": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component",
+    "arguments": [
+      "C:\\Xilinx\\Vitis_HLS\\2024.1\\vcxx\\libexec\\clang++.exe",
+      "-fhls",
+      "-hls-syn-headers-dir=C:\\Xilinx\\Vitis_HLS\\2024.1\\common\\technology\\autopilot",
+      "",
+      "-c",
+      "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\rcon.cpp"
+    ],
+    "file": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\rcon.cpp"
+  },
+  {
+    "directory": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component",
+    "arguments": [
+      "C:\\Xilinx\\Vitis_HLS\\2024.1\\vcxx\\libexec\\clang++.exe",
+      "-fhls",
+      "-hls-syn-headers-dir=C:\\Xilinx\\Vitis_HLS\\2024.1\\common\\technology\\autopilot",
+      "",
+      "-c",
+      "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\main.cpp"
+    ],
+    "file": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\main.cpp"
+  },
+  {
+    "directory": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component",
+    "arguments": [
+      "C:\\Xilinx\\Vitis_HLS\\2024.1\\vcxx\\libexec\\clang++.exe",
+      "-fhls-tb",
+      "-hls-sim-headers-dir=C:\\Xilinx\\Vitis_HLS\\2024.1\\include",
+      "",
+      "-c",
+      "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\tb.cpp"
+    ],
+    "file": "C:\\Users\\clark\\Documents\\PP\\AES\\hls_component\\tb.cpp"
+  }
+]
