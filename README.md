@@ -4,6 +4,7 @@ This is the final project for the Parallel Programming course at NYCU.
 The project implements AES-128 encryption on a BMP image using ECB mode.
 
 ## Compile and run
+### Software
 Build all: `make`
 
 Run: 
@@ -17,6 +18,9 @@ Run:
 `./build/aes-ni <test_img>`
 
 `./build/aes-ni-pthread <test_img>`
+
+### Hardware
+Import hls folder as "hls components" into Vitis IDE 2024.1.
 
 ## Performance testing
 You can use `cnt.py` to measure the performance of different executables by running each of them 500 times. 
