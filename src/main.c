@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
 }
 
 void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
-    printf("Processing BMP file for encryption\n");
     FILE *file = fopen(fileName, "rb");
 
     // BMP Header is 54 bytes
@@ -56,7 +55,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
     fread(data, sizeof(unsigned char), fileSize, file);
     fclose(file);
     
-    printf("AES ENCRYPTION START!\n");
     clock_t start = clock();
 
     size_t numBlocks = (fileSize + BLOCK_SIZE - 1) / BLOCK_SIZE;
@@ -77,7 +75,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
 
     free(data);
     free(encryptedData);
-    printf("BMP encryption complete\n");
 }
 
 void BMP_decrypt(const char *fileName, unsigned char *key, int keySize) {
