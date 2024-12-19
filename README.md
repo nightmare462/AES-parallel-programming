@@ -2,8 +2,7 @@
 This is the final project for the Parallel Programming course at NYCU.
 
 The project implements AES-128 encryption on a BMP image using ECB mode.
-## Reference
-https://github.com/m3y54m/aes-in-c/tree/main
+
 ## Compile and run
 Build all: `make`
 
@@ -26,3 +25,6 @@ You can use `cnt.py` to measure the performance of different executables by runn
 Run the following command:
 
 `python3 src/cnt.py ./build/<executable> <test_img> <num_threads>`
+
+## Reference
+https://github.com/m3y54m/aes-in-c/tree/main
