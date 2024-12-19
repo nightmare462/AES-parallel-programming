@@ -21,19 +21,13 @@ def main():
     if sys.argv[1] == 'serial':
         command = ["build/aes", "test/Tux.bmp"]
     elif sys.argv[1] == 'openmp':
-        command = ["build/aes_openmp", "test/Tux.bmp"]
-    elif sys.argv[1] == 'openssl':
-        command = ["build/aes_openssl", "test/Tux.bmp"]
-    elif sys.argv[1] == 'openssl_openmp':
-        command = ["build/aes_openssl_openmp", "test/Tux.bmp"]
+        command = ["build/aes_openmp", "test/Tux.bmp", sys.argv[2]]
     elif sys.argv[1] == 'pthread':
-        command = ["build/aes_pthread", "test/Tux.bmp"]
-    elif sys.argv[1] == 'mpi':
-        command = ["build/aes_mpi", "test/Tux.bmp"]
+        command = ["build/aes_pthread", "test/Tux.bmp", sys.argv[2]]
     elif sys.argv[1] == 'aes-ni':
         command = ["build/aes-ni", "test/Tux.bmp"]
     elif sys.argv[1] == 'aes-ni-pthread':
-        command = ["build/aes-ni-pthread", "test/Tux.bmp"]
+        command = ["build/aes-ni-pthread", "test/Tux.bmp", sys.argv[2]]
 
     runs = 500
     for _ in range(runs):

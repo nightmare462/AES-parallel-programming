@@ -7,7 +7,6 @@
 
 #define KEY_SIZE 16
 #define BLOCK_SIZE 16
-#define numThreads 4
 
 typedef struct {
     unsigned char *data;
@@ -61,7 +60,7 @@ void *encrypt_block(void *arg) {
     return NULL;
 }
 
-void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) {
+void BMP_encrypt(const char *fileName, unsigned char *key, int keySize, int numThreads) {
     FILE *file = fopen(fileName, "rb");
     if (!file) {
         perror("Error opening file");
@@ -124,9 +123,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    int numThreads = atoi(argv[2]);
+    printf("Processing BMP file with %d threads\n", numThreads);
     const char *fileName = argv[1];
     unsigned char key[KEY_SIZE] = {'I', 't', 'i', 's', 'a', 's', 'e', 'c', 'r', 'e', 't', 'e', 'k', 'e', 'y', '.'};
 
-    BMP_encrypt(fileName, key, KEY_SIZE);
+    BMP_encrypt(fileName, key, KEY_SIZE, numThreads);
     return 0;
 }

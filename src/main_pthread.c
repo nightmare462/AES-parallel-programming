@@ -57,7 +57,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize, int numT
     pthread_t threads[numThreads];
     ThreadData threadData[numThreads];
 
-    printf("AES ENCRYPTION START!\n");
     clock_t start = clock();
 
     size_t blocksPerThread = numBlocks / numThreads;
@@ -76,7 +75,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize, int numT
     }
 
     clock_t end = clock();
-    printf("AES ENCRYPTION END!\n");
     printf("Time %f ms\n", ((float)end - (float)start)/CLOCKS_PER_SEC *1000);
 
     FILE *outputFile = fopen("encrypted_image.bmp", "wb");

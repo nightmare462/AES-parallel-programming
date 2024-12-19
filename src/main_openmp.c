@@ -55,7 +55,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize, int numT
     
     unsigned char *encryptedData = aligned_alloc(64, paddedSize);
     
-    printf("AES ENCRYPTION START!\n");
     clock_t start = clock();
 
     #pragma omp parallel for num_threads(numThreads)
@@ -64,7 +63,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize, int numT
     }
 
     clock_t end = clock();
-    printf("AES ENCRYPTION END!\n");
     printf("Time %f ms\n", ((float)end - (float)start) / CLOCKS_PER_SEC * 1000);
 
     FILE *outputFile = fopen("encrypted_image.bmp", "wb");

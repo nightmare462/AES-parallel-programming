@@ -40,7 +40,6 @@ int main(int argc, char *argv[])
 
 void BMP_encrypt(const char *fileName, unsigned char *key, int keySize) 
 {
-    printf("Processing BMP file\n");
     FILE *file = fopen(fileName, "rb");
     if (!file) {
         printf("Error opening file\n");
@@ -62,7 +61,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize)
     size_t paddedSize = numBlocks * BLOCK_SIZE;
     unsigned char *encryptedData = calloc(paddedSize, sizeof(unsigned char));
 
-    printf("AES ENCRYPTION START!\n");
     clock_t start = clock();
     
     for (size_t i = 0; i < numBlocks; i++) {
@@ -70,7 +68,6 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize)
     }
 
     clock_t end = clock();
-    printf("AES ENCRYPTION END!\n");
     printf("Time %f ms\n", ((float)end - (float)start)/CLOCKS_PER_SEC *1000);
 
     FILE *outputFile = fopen("encrypted_image.bmp", "wb");
