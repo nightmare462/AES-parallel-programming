@@ -57,7 +57,7 @@ void BMP_encrypt(const char *fileName, unsigned char *key, int keySize, int numT
     
     clock_t start = clock();
 
-    #pragma omp parallel for num_threads(numThreads)
+    #pragma omp parallel for num_threads(numThreads) schedule(static)
     for (size_t i = 0; i < numBlocks; i++) {
         aes_encrypt(data + i * ALIGNMENT, encryptedData + i * BLOCK_SIZE, key, keySize);
     }
